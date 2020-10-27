@@ -1,0 +1,59 @@
+from Base import all
+import Base.Vector
+import Base.Data.Map
+
+import Basic_Statistics.Number.Extensions
+
+## The sum of values.
+Vector.Vector.sum : Number
+Vector.Vector.sum = this.fold 0 (+)
+
+## The average number.
+
+   The sum of the values divided by the number of values.
+Vector.Vector.mean : Number
+Vector.Vector.mean = this.sum / this.length
+
+## The middle number.
+
+   Found by ordering all data points and picking out the one in the middle, or
+   if there are two middle numbers, taking the mean of those two numbers.
+Vector.Vector.median : Number
+Vector.Vector.median =
+    size = this.length
+    middle = size // 2
+    this_sorted = this.quick_sort
+    if size % 2 == 0 then [this_sorted.at middle-1, this_sorted.at middle].mean else
+        this_sorted.at size//2
+
+Vector.Vector.quick_sort : Vector
+Vector.Vector.quick_sort =
+    if this.length == 0 then this else
+        head = this.at 0
+        tail = this.take_right (this.length - 1)
+        left_sorted = tail.filter (ix -> ix <= head) . quick_sort
+        right_sorted = tail.filter (ix -> ix > head) . quick_sort
+        left_sorted + [head] + right_sorted
+
+## The value that appears most often.
+
+   If there are several values that appear the same number of times, take the
+   smallest of them.
+Vector.Vector.mode : Number
+Vector.Vector.mode =
+    make_map map ix =
+        occurrences = map.get ix . catch <| case _ of
+            Map.No_Value_For_Key _ -> 0
+        map.insert ix occurrences+1
+    mode_vector = this.fold Map.empty make_map . to_vector
+    mode_head = mode_vector.at 0
+    mode_tail = mode_vector.take_right mode_vector.length-1
+    make_mode acc ix =
+        mode = acc.at 0
+        count = acc.at 1
+        imode = ix.at 0
+        icount = ix.at 1
+        if icount > count then ix else
+            if icount == count then [min mode imode, count] else acc
+    mode_pair = mode_tail.fold mode_head make_mode
+    mode_pair.at 0

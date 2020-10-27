@@ -1,48 +1,14 @@
 from Base import all
 import Base.Data.Map
 
-polyglot java import java.lang.Double
-polyglot java import java.lang.Math
+import Basic_Statistics.Vector.Extensions
 
-quick_sort : Vector -> Vector
-quick_sort xs =
-    if xs.length == 0 then xs else
-        hd = xs.at 0
-        tl = xs.take_right (xs.length - 1)
-        left_sorted = here.quick_sort (tl.filter (ix -> ix <= hd))
-        right_sorted = here.quick_sort (tl.filter (ix -> ix > hd))
-        left_sorted + [hd] + right_sorted
+polyglot java import java.lang.Double
 
 main =
     n = Double.parseDouble [IO.readLn]
     input = IO.readLn . split_at " " . map (x -> Double.parseDouble [x])
     if not input.length==n then Panic.throw "Invalid input"
-    # mean
-    sum = input.fold 0 (+)
-    mean = sum / input.length
-    IO.println mean
-    # median
-    input_sorted = here.quick_sort input
-    #middle = Math.floor [input.length / 2]
-    middle = Math.floorDiv [input.length, 2]
-    # TODO decide if `at` should work with doubles
-    median = ((input_sorted.at middle-1) + (input_sorted.at middle)) / 2
-    IO.println median
-    # mode
-    make_map m ix =
-        n = m.get ix . catch <| case _ of
-            Map.No_Value_For_Key _ -> 0
-        m.insert ix n+1
-    map = input.fold Map.empty make_map
-    mode_vector = map.to_vector
-    mode_head = mode_vector.at 0
-    mode_tail = mode_vector.take_right (input.length - 1)
-    make_mode acc ix =
-        mode = acc.at 0
-        count = acc.at 1
-        imode = ix.at 0
-        icount = ix.at 1
-        if icount > count then ix else
-            if icount == count then [min mode imode, count] else acc
-    mode = mode_tail.fold mode_head make_mode
-    IO.println mode
+    IO.println input.mean
+    IO.println input.median
+    IO.println input.mode
