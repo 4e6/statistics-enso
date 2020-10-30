@@ -5,3 +5,9 @@ polyglot java import java.lang.Math
 ## Quotient of a and b, removing fractional parts.
 Number.// : Number -> Integer
 Number.// divisor = Math.floorDiv [this, divisor]
+
+## Exponentiation.
+
+   this number raised to the power of that number.
+Number.** : Number -> Number
+Number.** that = Math.pow [this, that]

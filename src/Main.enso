@@ -1,14 +1,20 @@
 from Base import all
 import Base.Data.Map
 
-import Basic_Statistics.Vector.Extensions
+import Statistics.Vector.Extensions
 
-polyglot java import java.lang.Double
+polyglot java import java.lang.Long
+
+parse_integer : Text -> Integer
+parse_integer text = Long.parseLong [text]
+
+## Read a vector from space-separated text.
+read_vector : Text -> Vector
+read_vector text = text.split_at " " . map (x -> Long.parseLong [x])
 
 main =
-    n = Double.parseDouble [IO.readLn]
-    input = IO.readLn . split_at " " . map (x -> Double.parseDouble [x])
+    n = here.parse_integer IO.readLn
+    input = here.read_vector IO.readLn
     if not input.length==n then Panic.throw "Invalid input"
-    IO.println input.mean
-    IO.println input.median
-    IO.println input.mode
+    IO.println input
+    IO.println input.quartiles
