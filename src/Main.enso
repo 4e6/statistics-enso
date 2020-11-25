@@ -1,19 +1,14 @@
 from Base import all
-import Base.Data.Map
 
+import Statistics.Number.Extensions
 import Statistics.Vector.Extensions
-
-polyglot java import java.lang.Long
-
-parse_integer : Text -> Integer
-parse_integer text = Long.parseLong [text]
 
 ## Read a vector from space-separated text.
 read_vector : Text -> Vector
-read_vector text = text.split_at " " . map (x -> Long.parseLong [x])
+read_vector text = text.split . map Number.parse_integer
 
 main =
-    n = here.parse_integer IO.readLn
+    n = Number.parse_integer IO.readLn
     input = here.read_vector IO.readLn
     if not input.length==n then Panic.throw "Invalid input"
     IO.println input
